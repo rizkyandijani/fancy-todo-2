@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
+    <link href="https://fonts.googleapis.com/css?family=Knewave&display=swap" rel="stylesheet">    
+    <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Lobster+Two|Muli|Rasa&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <meta name="google-signin-client_id" content="794107542667-chbefj7vhs7e41q4nscncmp7o9s386a6.apps.googleusercontent.com">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Cool-Todo</title>
+    <style>
+        .g-signin2{
+            width: 100%;
+            }   
+    
+        .g-signin2 > div{
+            margin: 0 auto;
+            }
+    </style>
+</head>
+<body>
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" style="color: green">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle"><i class="fas fa-plus-circle mr-2"></i>Add New Todo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <form>
+                            <div class="form-group was-validated">
+                                <label for="todo-title"><i class="fas fa-bullseye"></i>Title : </label>
+                                <input type="text" class="form-control" id="todo-title" placeholder="Title.." required>
+                                <div class="invalid-feedback">form can't be empty</div>
+                            </div>
+                            <div class="form-group was-validated">
+                                <label for="todo-description"><i class="fas fa-bullseye"></i>Description : </label>
+                                <input type="text" class="form-control" id="todo-desc" placeholder="Description.." required>
+                                <div class="invalid-feedback">form can't be empty</div>                                
+                            </div>
+                            <div class="form-group was-validated">
+                                <label for="todo-tags"><i class="fas fa-bullseye"></i>Tags : </label>
+                                <input type="text" class="form-control" id="todo-tags" placeholder="if tag more than one, devide with ',' without space.." required>
+                                <div class="invalid-feedback">form can't be empty</div>                                
+                            </div>
+                            <div id="dateForm" class="form-group">
+                            </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="add-todo" type="button" class="btn btn-success">Add Todo</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalEditTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" style="color: green">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditTitle"><i class="fas fa-plus-circle mr-2"></i>Edit Todo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <form>
+                                <div class="form-group was-validated">
+                                    <label for="todo-title-edit"><i class="fas fa-bullseye"></i>Title : </label>
+                                    <input type="text" class="form-control" id="todo-title-edit" placeholder="Title.." required>
+                                    <div class="invalid-feedback">form can't be empty</div>
+                                </div>
+                                <div class="form-group was-validated">
+                                    <label for="todo-description-edit"><i class="fas fa-bullseye"></i>Description : </label>
+                                    <input type="text" class="form-control" id="todo-desc-edit" placeholder="Description.." required>
+                                    <div class="invalid-feedback">form can't be empty</div>                                
+                                </div>
+                                <div class="form-group was-validated">
+                                    <label for="todo-tags-edit"><i class="fas fa-bullseye"></i>Tags : </label>
+                                    <input type="text" class="form-control" id="todo-tags-edit" placeholder="if tag more than one, devide with ',' without space.." required>
+                                    <small>if tag more than one, devide with ',' without space</small>
+                                    <div class="invalid-feedback">form can't be empty</div>                                
+                                </div>
+                                <div id="dateFormEdit" class="form-group">
+                                    
+                                </div>
+                            </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="editTodo" type="button" class="btn btn-success">edit Todo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addProjectModal" tabindex="-1" role="dialog" aria-labelledby="addProjectModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" style="color: green">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProjectModalTitle"><i class="fas fa-plus-circle mr-2"></i>Create New Project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <form>
+                            <div class="form-group was-validated">
+                                <label for="project-title"><i class="fas fa-project-diagram mr-2"></i></i>Title : </label>
+                                <input type="text" class="form-control" id="project-title" placeholder="Title.." required>
+                                <div class="invalid-feedback">form can't be empty</div>
+                            </div>
+                            <div class="form-group was-validated">
+                                <label for="project-description"><i class="fas fa-project-diagram mr-2"></i></i>Description : </label>
+                                <input type="text" class="form-control" id="project-desc" placeholder="Description.." required>
+                                <div class="invalid-feedback">form can't be empty</div>                                
+                            </div>
+                            <div id="addMember">
+                                <div class="col">
+                                    <div class="text-left"><h6>add member to your project : </h6></div>
+                                    <form action="./javascript/index.js">
+                                        <div id="user-container" class="row">
+                                            <!-- <div class="card col-6 bg-warning">
+                                                <span>Rizky Andi Jani</span>
+                                            </div>
+                                            <div class="ml-2 mt-1">
+                                                <input type="checkbox">
+                                            </div> -->
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="addProject()" type="button" class="btn btn-success">Create Project</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editProjectModal" tabindex="-1" role="dialog" aria-labelledby="editProjectModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" style="color: green">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProjectModalTitle"><i class="fas fa-plus-circle mr-2"></i>Edit Project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <form>
+                            <div class="form-group was-validated">
+                                <label for="project-title"><i class="fas fa-project-diagram mr-2"></i></i>Title : </label>
+                                <input type="text" class="form-control" id="project-title-edit" placeholder="Title.." required>
+                                <div class="invalid-feedback">form can't be empty</div>
+                            </div>
+                            <div class="form-group was-validated">
+                                <label for="project-description"><i class="fas fa-project-diagram mr-2"></i></i>Description : </label>
+                                <input type="text" class="form-control" id="project-desc-edit" placeholder="Description.." required>
+                                <div class="invalid-feedback">form can't be empty</div>                                
+                            </div>
+                            <div id="addMember">
+                                <div class="col">
+                                    <div class="text-left"><h6>add member to your project : </h6></div>
+                                    <form action="./javascript/index.js">
+                                        <div id="user-container-edit" class="row">
+                                            <!-- <div class="card col-6 bg-warning">
+                                                <span>Rizky Andi Jani</span>
+                                            </div>
+                                            <div class="ml-2 mt-1">
+                                                <input type="checkbox">
+                                            </div> -->
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="editProject()" type="button" class="btn btn-success">Edit Project</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-light" style="font-family: 'Knewave'; height: 70px; background-color: #E8C990">
+            <div>
+            </div>
+            <a style="position: absolute; left: 850px;" class="row navbar-brand" href="#">
+                <div class="animated infinite pulse delay-1s">
+                    <img src="https://img.icons8.com/cotton/64/000000/checklist.png" style="width: 40px">
+                    <span class="mt-5" style="color: aqua; font-size: 24px">Cool</span><span class="mt-5" style="color: bisque;font-size: 24px">-Do</span>
+                </div>
+            </a>
+            <div style="font-size: 18px; font-weight : bold;">
+                <div id="user-and-logout" class="row animated bounceInRight delay-1s" style="font-family: 'Bree-Serif'">
+                    <div class="mr-5">
+                        <span id="nameLogged"></span>
+                    </div>
+                    <div class="mr-5">
+                        <a id="logout-button" href="#" style="text-decoration: none; color: black"><span>Log Out</span></a> 
+                    </div>   
+                </div>
+            </div>
+        </nav>
+        <div class="jumbotron" style="background: none">
+            <div id="main-page" class="row animated fadeIn delay-1s justify-content-center">
+                <div class="card col-3 text-center mr-1" style="font-family: 'Bree-Serif';background-color: #FFD8AC;border: none">
+                    <div class="row">
+                        <div class="col-8 mt-3" style="font-family: 'Lobster Two'">
+                            <h2>Todo List</h2>
+                        </div>
+                        <div class="col-4" ">
+                            <button id="open-todo-modal" type="button" class="btn btn-success mt-3" style="padding: 5px" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus-circle mr-2"></i>New Todo</button>
+                        </div>
+                    </div>
+                    <br>
+                    <form class="form-inline mt-4">
+                        <input id="mySearch" class="form-control col-12" type="search" placeholder="Search" aria-label="Search">
+                    </form>
+                    <span>or search by tags : </span>
+                    <div id="tag-container" class="row mt-2 pa-2"></div>
+                    <hr>
+
+                    <div id="todo-list" class="row" >
+                        
+                    </div>
+                </div>
+                <div class="card col-5 border text-center" style="background-color: #FFD8AC; border: none">
+                    <div style="font-family: 'Lobster Two'">
+                        <h1>Project detail</h1>
+                    </div>
+                    <hr>
+                    <div id="detail-page" style="font-family: 'Bree-Serif'"></div>
+                </div>
+                <div class="card col-3 text-center ml-1" style="font-family: 'Bree-Serif';background-color: #FFD8AC;border: none">
+                    <div class="row justify-content-around">
+                        <div class="col mt-2" style="font-family: 'Lobster Two'"><h2>Project List</h2></div>
+                        <button type="button" class="col-4 btn btn-primary mr-2 mt-2" style="padding: 1px;" data-toggle="modal" data-target="#addProjectModal"><i class="fas fa-plus-circle mr-2"></i>New Project</button>
+                    </div>
+                    <hr>
+                    <div id="project-list" class="row"></div>
+                </div>
+            </div>
+            <div id="login-page" class="row text-center mt-2 animated fadeInUp delay-1s" style="margin: 0;padding:0; font-size: 20px; font-family: 'Prompt'">
+                <div class="col-6 offset-3">
+                    <div class="card p-1"style="background-color:#FFD8AC">
+                        <h1>login form</h1>
+                        <div class="col-10 offset-1 p-5">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Email address</label>
+                                    <input id="email-login" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
+                                    <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Password</label>
+                                    <input id="password-login" type="password" class="form-control" placeholder="Password">
+                                </div>
+                                <button id="login" type="submit" class="btn btn-primary">Login</button>
+                            </form>
+                            <br>
+                            <div class="row text-center justify-content-center">
+                                <p class="text-center" style="text-align : center">or login with Google Account</p>
+                                <div class="g-signin2" data-onsuccess="onSignIn" >button</div>
+                                <!-- <button onclick="signOut()" type="button" class="btn btn-primary" style="padding:0px">signout</button> -->
+                            <div>
+                                <br>
+                                </script>
+                            </div>
+                            </div>
+                            <br>
+                            <div>
+                                <p>dont have any account yet? register here</p>
+                                <button id="to-register" type="submit" class="btn btn-primary">register</button>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="register-page" class="row text-center mt-2 animated fadeInUp delay-1s" style="margin: 0;padding:0; font-size: 20px; font-family: 'Prompt'">
+                <div class="col-6 offset-3">
+                    <div class="card p-1" style="background-color:#FFD8AC">
+                        <h1>register form</h1>
+                        <div class="col-10 offset-1 p-5">
+                            <form>
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="your first name..">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="your last name..">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email address</label>
+                                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Password">
+                                </div>
+                                <button id="register" type="submit" class="btn btn-primary">Register</button>
+                            </form>
+                            <br>
+                            <div>
+                                <p>already have an account? login here</p>
+                                <button id="to-login" type="submit" class="btn btn-primary">login</button>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+        <script src="./javascript/index.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+</body>
+</html>
