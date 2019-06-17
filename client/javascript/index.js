@@ -479,27 +479,6 @@ function deleteProject(id){
 function editProjectModal(id){
     editingProject = true
     editProjectId = id
-    $.ajax({
-        url : `${baseURL}/projects/${id}`,
-        method : 'get',
-        headers : {
-            token : localStorage.token
-        }
-    })
-    .done(response =>{
-        projectCreator = response.creator._id
-        let title = response.title
-        let description = response.description
-        $("#project-title-edit").val(`${title}`)
-        $("#project-desc-edit").val(`${description}`)
-        response.memberList.forEach(member =>{
-            $(`#${member._id}`).checked = true
-        })
-    })
-    .fail((jqHXR,status)=>{
-        console.log(status);
-        
-    })
 }
 
 function editProject(){
@@ -605,7 +584,7 @@ function detailProject(id){
             response.memberList.forEach(member =>{
                 if(member.length !== 0){
                     $("#member-container").append(`
-                        <div class="card">${member.firstName} ${member.lastName}</div>
+                        <div class="ca                    console.log(typeof user._id, '================')rd">${member.firstName} ${member.lastName}</div>
                     `)
                 }else{
                     $("#member-container").append(`
@@ -770,36 +749,72 @@ $("#exampleModalCenter").on('hidden.bs.modal',function(e){
         })
 
         $("#editProjectModal").on('show.bs.modal',function(){
+            let members = []
             $("#user-container-edit").empty()
             $.ajax({
-                url : `${baseURL}/users`,
+                url : `${baseURL}/projects/${editProjectId}`,
                 method : 'get',
                 headers : {
                     token : localStorage.token
                 }
             })
             .done(response =>{
-                if(response.length < 1){
-                    $("#user-container-edit").append(`
-                        <h6 class="ml-4">no user can be added..</h6>
-                    `)
-                }else{
-                    response.forEach(user =>{
+                projectCreator = response.creator._id
+                let title = response.title
+                let description = response.description
+                $("#project-title-edit").val(`${title}`)
+                $("#project-desc-edit").val(`${description}`)
+                response.memberList.forEach(user =>{
+                    members.push(user._id)
+                })
+                $.ajax({
+                    url : `${baseURL}/users`,
+                    method : 'get',
+                    headers : {
+                        token : localStorage.token
+                    }
+                })
+                .done(response =>{
+                    if(response.length < 1){
                         $("#user-container-edit").append(`
-                            <div class="card col-6 bg-warning">
-                                <span class="ml-2">${user.firstName} ${user.lastName}</span>
-                            </div>
-                            <div class="ml-2 mt-1">
-                                <input id="#${user.id}" class="myCheckbox" value="${user._id}" type="checkbox" name="user">
-                            </div>
+                            <h6 class="ml-4">no user can be added..</h6>
                         `)
-                    })
-                }
+                    }else{
+                        response.forEach(user =>{
+                            if(members.indexOf(user._id) === -1){                                
+                                $("#user-container-edit").append(`
+                                    <div class="card col-6 bg-warning">
+                                        <span class="ml-2">${user.firstName} ${user.lastName}</span>
+                                    </div>
+                                    <div class="ml-2 mt-1">
+                                        <input id="${user._id}-checkbox" class="myCheckbox" value="${user._id}" type="checkbox" name="user">
+                                    </div>
+                                `)
+                            }else{
+                                $("#user-container-edit").append(`
+                                    <div class="card col-6 bg-warning">
+                                        <span class="ml-2">${user.firstName} ${user.lastName}</span>
+                                    </div>
+                                    <div class="ml-2 mt-1">
+                                        <input id="${user._id}-checkbox" class="myCheckbox" value="${user._id}" type="checkbox" name="user" checked>
+                                    </div>
+                                `)
+                            }
+                        })
+                        
+                    }
+                })
+                .fail((jqHXR,status)=>{
+                    console.log(status);
+                    
+                })
             })
             .fail((jqHXR,status)=>{
                 console.log(status);
                 
             })
+
+            
         })
 
         $("#modalEdit").on('hidden.bs.modal',function(){
