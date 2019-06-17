@@ -98,6 +98,9 @@ function signOut(){
 
 function getTodos(){
     let querySearch = $("#mySearch").val()
+    if(!queryTag){
+        filteredTag = []
+    }
     console.log('ini query search',querySearch);
     
     let link = ''
@@ -196,12 +199,14 @@ function getTodos(){
             })
             
             listOfTag = listOfTag.join().split(',')
+            
             if(listOfTag[0] !== ""){
                 if(filteredTag.length !== 0){
 
                 }else{
                     filteredTag = filterTag(listOfTag)
                 }
+                
                 filteredTag.forEach(tagging=>{
                     $("#tag-container").append(`
                         <button onclick="searchByTag('${tagging}')" class="col btn btn-info mr-1 ml-1" style="padding:0px;font-size: 12px;">${tagging}</button>
