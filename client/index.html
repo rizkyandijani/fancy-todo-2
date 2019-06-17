@@ -219,10 +219,14 @@
                     </div>
                     <br>
                     <form class="form-inline mt-4">
-                        <input id="mySearch" class="form-control col-12" type="search" placeholder="Search" aria-label="Search">
+                        <input id="mySearch" onkeyup="getTodos()" class="form-control col-12" type="search" placeholder="Search" aria-label="Search">
                     </form>
                     <span>or search by tags : </span>
                     <div id="tag-container" class="row mt-2 pa-2"></div>
+                    <div class="justify-content-center">
+                        <button type="button" onclick="resetSearch()" class="btn btn-danger col-5 mt-2" style="padding: 0px;margin: 0px"> reset search </button>
+
+                    </div>
                     <hr>
 
                     <div id="todo-list" class="row" >

@@ -6,6 +6,8 @@ let editId = ''
 let editingProject = false
 let editProjectId = ''
 let projectCreator = ''
+let queryTag = ''
+let filteredTag = []
 
 
 function onSignIn(googleUser){
@@ -58,21 +60,70 @@ function loggedIn(){
     $("#nameLogged").empty()
     $("#nameLogged").append(`${localStorage.name}`)
     $("#main-page").show()
+    projectTodoId = ''
+    todoForProject = false
+    editing = false
+    editId = ''
+    editingProject = false
+    editProjectId = ''
+    projectCreator = ''
+    queryTag = ''
+    $("#mySearch").val('')
     getTodos()
     getProjects()
 }
 
+function resetSearch(){
+    queryTag = ''
+    $("#mySearch").val('')
+    getTodos()
+}
+
+
+function signOut(){
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function(){
+        localStorage.removeItem('token')    
+    })
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('email')
+    localStorage.removeItem('name')
+    $("#nameLogged").empty()
+    $("#detail-page").empty()
+    $("#user-and-logout").hide()
+    $("#main-page").hide()
+    $("#login-page").show()
+}
+
 function getTodos(){
+    let querySearch = $("#mySearch").val()
+    console.log('ini query search',querySearch);
+    
+    let link = ''
+    if(queryTag !== ''){
+        console.log('ada query');
+        link = `${baseURL}/todos?tag=${queryTag}`
+    }else if(querySearch !== ''){
+        link = `${baseURL}/todos?search=${querySearch}`
+    }
+    else{
+        console.log('ga ada query');
+        link = `${baseURL}/todos`
+    }
     $.ajax({
-        url: `${baseURL}/todos`,
+        url: `${link}`,
         method : 'get',
         headers : {
             token : localStorage.token
         }
     })
     .done(response =>{
+        console.log('hasil response get',response);
+        
         $("#todo-list").empty()
         $("#tag-container").empty()
+        
         let todoAndTags = []
         if(response.length === 0){
             $("#todo-list").append(`
@@ -136,7 +187,7 @@ function getTodos(){
             todoAndTags.forEach(todo =>{
                 todo[1].forEach(tag =>{
                     $(`#todo-tags-${todo[0]}`).append(`
-                        <button class="col-3 btn btn-info" style="padding:0px;font-size: 12px;">${tag}</button>
+                        <button  class="col-3 btn btn-info" style="padding:0px;font-size: 12px;">${tag}</button>
                     `)
                 })
                 if(todo[1].length !== 0){
@@ -146,9 +197,14 @@ function getTodos(){
             
             listOfTag = listOfTag.join().split(',')
             if(listOfTag[0] !== ""){
-                listOfTag.forEach(tagging=>{
+                if(filteredTag.length !== 0){
+
+                }else{
+                    filteredTag = filterTag(listOfTag)
+                }
+                filteredTag.forEach(tagging=>{
                     $("#tag-container").append(`
-                        <button class="col btn btn-info mr-1 ml-1" style="padding:0px;font-size: 12px;">${tagging}</button>
+                        <button onclick="searchByTag('${tagging}')" class="col btn btn-info mr-1 ml-1" style="padding:0px;font-size: 12px;">${tagging}</button>
                     `)
                 })
             }
@@ -159,20 +215,20 @@ function getTodos(){
     })
 }
 
-function signOut(){
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function(){
-        localStorage.removeItem('token')    
+function filterTag(array){
+    let arr = []
+    array.forEach(element =>{
+        if(arr.indexOf(element) === -1){
+            arr.push(element)
+        }
     })
-    localStorage.removeItem('token')
-    localStorage.removeItem('userId')
-    localStorage.removeItem('email')
-    localStorage.removeItem('name')
-    $("#nameLogged").empty()
-    $("#detail-page").empty()
-    $("#user-and-logout").hide()
-    $("#main-page").hide()
-    $("#login-page").show()
+    return arr
+}
+
+function searchByTag(query){
+    console.log(query);
+    queryTag = query
+    getTodos()
 }
 
 function addTodo(item){
@@ -584,7 +640,7 @@ function detailProject(id){
             response.memberList.forEach(member =>{
                 if(member.length !== 0){
                     $("#member-container").append(`
-                        <div class="ca                    console.log(typeof user._id, '================')rd">${member.firstName} ${member.lastName}</div>
+                        <div class="card">${member.firstName} ${member.lastName}</div>
                     `)
                 }else{
                     $("#member-container").append(`
@@ -837,12 +893,12 @@ $(document).ready(function(){
         loggedIn()
     }
 
-    $("#mySearch").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#todo-list *").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-      });
+    // $("#mySearch").on("keyup", function() {
+    //     var value = $(this).val().toLowerCase();
+    //     $("#todo-list *").filter(function() {
+    //       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    //     });
+    //   });
 
     $("#to-login").click(function(){
         event.preventDefault()

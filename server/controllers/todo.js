@@ -3,11 +3,34 @@ const Project = require('../models/project')
 class TodoController{
 
     static getAll(req,res,next){
+        console.log('masuk read',req.query.search);
+        
+        let queryTag = req.query.tag
+        let querySearch = req.query.search
+        let option = {
+            userId : req.loggedUser.id,
+            title : {$regex : `.*${querySearch}.*`}
+        }
+        if(!querySearch) delete option.title
         Todo
-        .find({userId : req.loggedUser.id})
+        .find(option)
         .then(data =>{
-            
-            res.status(200).json(data)
+            if(queryTag){
+                console.log('ini query tag',queryTag);
+                
+                let filtered = []
+                data.forEach(todo =>{
+                    console.log('ini todo',todo);
+                    if(todo.tags.indexOf(queryTag) !== -1){
+                        filtered.push(todo)
+                    }
+                })
+                console.log('ini filtered',filtered);
+                
+                res.status(200).json(filtered)
+            }else{
+                res.status(200).json(data)
+            }
         })
         .catch(next)
     }
