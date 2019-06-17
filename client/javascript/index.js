@@ -209,7 +209,7 @@ function getTodos(){
                 
                 filteredTag.forEach(tagging=>{
                     $("#tag-container").append(`
-                        <button onclick="searchByTag('${tagging}')" class="col btn btn-info mr-1 ml-1" style="padding:0px;font-size: 12px;">${tagging}</button>
+                        <button onclick="searchByTag('${tagging}')" class="col-2 btn btn-info mr-1 ml-1 mt-1" style="padding:0px;font-size: 12px;">${tagging}</button>
                     `)
                 })
             }
