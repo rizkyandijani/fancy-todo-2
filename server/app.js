@@ -10,7 +10,8 @@ const route = require('./routes/index')
 const mongoose = require('mongoose')
 const errorHandler = require('./middlewares/errorHandler')
 
-mongoose.connect('mongodb://localhost/cool-do',{useNewUrlParser : true})
+mongoose.connect('mongodb+srv://admin:admin@cluster0-efobx.gcp.mongodb.net/cool-do?retryWrites=true&w=majority',{useNewUrlParser : true})
+
 
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())

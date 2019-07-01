@@ -1,4 +1,6 @@
 const Project = require('../models/project')
+const User = require('../models/user')
+const {nodeMailer} = require('../helpers/nodemailer')
 
 class ProjectController{
 
@@ -33,6 +35,16 @@ class ProjectController{
     static create(req,res,next){
         
         let member = JSON.parse(req.body.memberList)
+        console.log('ini member broooo',member);
+        member.forEach(user =>{
+            User
+            .findById(user)
+            .then(data =>{
+                console.log(data.email);
+                nodeMailer(data.email,'invitation',{title : req.body.title, inviter : req.loggedUser.id})
+            })
+            .catch(next)
+        })
         member.push(req.loggedUser.id)
         let project = new Project({
             title : req.body.title,
@@ -42,6 +54,7 @@ class ProjectController{
         })
         project.save()
         .then(data =>{
+            console.log(data);
             res.status(201).json(data)
         })
         .catch(next)
@@ -79,6 +92,7 @@ class ProjectController{
     }
 
     static invite(req,res,next){
+
         Project
         .findById(req.params.projectId)
         .then(project =>{

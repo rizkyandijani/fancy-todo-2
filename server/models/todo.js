@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const {momentjs} = require('../helpers/moment')
 const Schema = mongoose.Schema
 
 let todoSchema = new Schema({
@@ -9,8 +10,15 @@ let todoSchema = new Schema({
     status: String,
     projectId : String,
     tags : Array,
-    userId : String
+    userId : String,
+    dayLeft : String
 })
+
+// todoSchema.post('find',function(result){
+//     result.forEach(el => {
+//         el.dayLeft = momentjs(el.dueDate)
+//     })
+// })
 
 let Todo = mongoose.model('todo',todoSchema)
 

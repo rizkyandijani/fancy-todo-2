@@ -1,4 +1,4 @@
-let baseURL = "http://localhost:3000"
+let baseURL = "http://35.240.172.169:3000"
 let projectTodoId = ''
 let todoForProject = false
 let editing = false
@@ -122,8 +122,6 @@ function getTodos(){
         }
     })
     .done(response =>{
-        console.log('hasil response get',response);
-        
         $("#todo-list").empty()
         $("#tag-container").empty()
         
@@ -215,8 +213,8 @@ function getTodos(){
             }
         }
     })
-    .fail((jqHXR,status)=>{
-        console.log(status);
+    .fail((jqXHR,statusText)=>{
+        console.log(statusText);
     })
 }
 
@@ -249,7 +247,9 @@ function addTodo(item){
     .done(response =>{
         Swal.fire('successfully add todo!','','success')
         getTodos()
-        detailProject(response.projectId)
+        if(response.projectId){
+            detailProject(response.projectId)
+        }
     })
     .fail((jqHXR,status)=>{
         console.log(status);
@@ -606,6 +606,8 @@ function addProject(){
 }
 
 function detailProject(id){
+    console.log('masuk detail');
+    
     $("#detail-page").empty()
     $("#project-todo-list").empty()
     projectTodoId = id
@@ -1049,7 +1051,7 @@ $(document).ready(function(){
         let dateMin = today()
         $("#dateForm").append(`
             <label for="todo"><i class="far fa-calendar-plus mr-2"></i>Due Date : </label>
-            <input type="date" class="form-control" id="dueDate" min=${dateMin} required >
+            <input type="date" cdateFormlass="form-control" id="dueDate" min=${dateMin} required >
         `)
     })
 

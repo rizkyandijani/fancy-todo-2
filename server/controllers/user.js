@@ -2,6 +2,7 @@ const User = require('../models/user')
 const { compare } = require('../helpers/bcrypt')
 const { sign } = require('../helpers/jwt')
 const {OAuth2Client} = require('google-auth-library')
+const { nodeMailer } = require('../helpers/nodemailer')
 
 class UserController{
     static getAll(req,res,next){
@@ -36,9 +37,10 @@ class UserController{
             password: req.body.password
         })
         user.save()
-        .then(value =>[
+        .then(value =>{
+            nodeMailer(value.email,'welcome',null)
             res.status(201).json(value)
-        ])
+        })
         .catch(next)
     }
 
